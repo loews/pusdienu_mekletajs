@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="lv">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ienākt</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    
+    <script>
+
+
+      function handleLogin(event) {
+        event.preventDefault();
+
+        const correctUsername = "admin";
+        const correctPassword = "password123";
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        if (username === correctUsername && password === correctPassword) {
+
+          localStorage.setItem("isLoggedIn", "true");
+          alert("Pieteikšanās veiksmīga!");
+          window.location.href = "admin.html";
+        } else {
+          alert("Nepareizs lietotājvārds vai parole!");
+        }
+      }
+    </script>
+  </head>
+
+  <body id="login-page">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar-container">
+        <ul class="navbar-menu">
+          <li class="navbar-item"><a href="index.html" class="navbar-links">Sākums</a></li>
+          <li class="navbar-item"><a href="kontakti.html" class="navbar-links">Kontakti</a></li>
+          <li class="navbar-btn"><a href="login.html" class="button">Ienākt</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Login Form -->
+    <div class="login-container">
+      <div class="login-box">
+        <h2>Ienākt</h2>
+        <form onsubmit="handleLogin(event)">
+          <input type="text" id="username" placeholder="Lietotājvārds" class="login-input" required>
+          <input type="password" id="password" placeholder="Parole" class="login-input" required>
+          <button type="submit" class="login-button">Ienākt</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-left">
+          <h3>Pusdienu meklētājs</h3>
+          <p>© 2025</p>
+        </div>
+        <div class="footer-center">
+          <p><i class="fas fa-phone"></i> +371 21 212 121</p>
+          <p><i class="fas fa-envelope"></i> email@email.com</p>
+        </div>
+        <div class="footer-right">
+          <a href="index.html" class="navbar-links">Sākums</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

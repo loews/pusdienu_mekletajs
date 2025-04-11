@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="lv">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pusdienu meklētājs</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+  </head>
+
+  <body>
+
+    <!--Navbars-->
+
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="navbar-toggle" id="mobile-menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+        <ul class="navbar-menu">
+          <li class="navbar-item">
+            <a href="index.html" class="navbar-links">Sākums</a>
+          </li>
+          <li class="navbar-item">
+            <a href="kontakti.html" class="navbar-links">Kontakti</a>
+          </li>
+          <li class="navbar-btn">
+            <a href="login.html" class="button">Ienākt</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!--Hero-->
+
+    <div class="main">
+      <div class="main-container">
+        <div class="main-content">
+          <h1>Izpēti pusdienu piedāvājumus visā Latvijā!</h1>
+          <button class="use-location" id="get-location"><a href="#map">Izmantot manu atrašanās vietu</button></a>
+          <h2>Vai</h2>
+          <button class="input-location">Ievadīt lokāciju</button>
+          
+          <div id="manual-location">
+            <input type="text" id="location-input" placeholder="Ievadi pilsētu vai adresi" />
+            <button id="search-location">Meklēt</button>
+          </div>
+
+          <a href="#map" class="scroll-arrow">
+            <img src="images/adown.svg" alt="Scroll to map"></a>
+        </div>
+      </div>
+    </div>
+
+    <!--Map-->
+
+    <style>
+     #map {
+          height: 800px;
+          
+          width: 1860px;
+         }
+    </style>
+
+
+    <div id="map-container">
+      <div id="zoom-instruction">Kartes tālummaiņai izmantojiet Shift + ritināšanu</div>
+      <div id="map"></div>
+    </div>
+
+
+
+    <script>
+      const staticMarkers = [
+        {
+          name: "Lulu pica",
+          address: "Krasta iela 76, Rīga",
+          coords: [56.935334, 24.072107],
+          offer: "Sierīgais komplekts - Divas siera picas un divi dzērieni",
+          price: "15.00"
+        },
+        {
+          name: "Lido",
+          address: "Stirnu iela 32, Rīga",
+          coords: [56.959844, 24.187253],
+          offer: "Tītara kotlete burkānu tomātu mērcē, vārīti griķi un burkānu seleriju salāti",
+          price: "4.20"
+        },
+        {
+          name: "Bibliotēka No1",
+          address: "Tērbatas iela 2, Rīga",
+          coords: [56.952215, 24.116428],
+          offer: "Flank steiks ar kartupeļu pavē un sulu",
+          price: "23.00"
+        },
+        {
+          name: "Vairāk Saules",
+          address: "Mūkusalas iela 71, Rīga",
+          coords: [56.920421, 24.096431],
+          offer: "Grilēta vistas fileja ar dārzeņu sautējumu",
+          price: "8.50"
+        },
+        {
+          name: "Hesburger",
+          address: "Brīvības iela 40, Rīga",
+          coords: [56.948889, 24.118056],
+          offer: "Hesburger komplekts: burgers, frī kartupeļi un dzēriens",
+          price: "6.00"
+        },
+        {
+          name: "Čili Pica",
+          address: "Elizabetes iela 55, Rīga",
+          coords: [56.951111, 24.113333],
+          offer: "Lielā pica ar četrām garšām",
+          price: "12.00"
+        }
+      ];
+    
+
+      function loadMarkersOnMap() {
+        const storedMarkers = JSON.parse(localStorage.getItem("restaurants")) || [];
+        const allMarkers = [...staticMarkers, ...storedMarkers];
+    
+        allMarkers.forEach((marker) => {
+          const mapMarker = L.marker(marker.coords).addTo(map);
+          mapMarker.bindPopup(
+            `<b>${marker.name}</b><br>${marker.address}<br><br>${marker.offer}<br><br>${marker.price}€`
+          );
+        });
+      }
+    
+      const map = L.map("map", {
+  scrollWheelZoom: false,
+}).setView([56.9496, 24.1052], 13);
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+}).addTo(map);
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Shift") {
+    map.scrollWheelZoom.enable();
+  }
+});
+
+document.addEventListener("keyup", (e) => {
+  if (e.key === "Shift") {
+    map.scrollWheelZoom.disable();
+  }
+});
+      loadMarkersOnMap();
+      document.addEventListener("DOMContentLoaded", () => {
+  const useLocationButton = document.getElementById("get-location");
+  useLocationButton.addEventListener("click", () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          map.setView([latitude, longitude], 14);
+          L.marker([latitude, longitude])
+            .addTo(map)
+            .bindPopup("Jūsu atrašanās vieta")
+            .openPopup();
+        },
+        (error) => {
+          alert("Neizdevās noteikt atrašanās vietu. Lūdzu, pārbaudiet savus iestatījumus.");
+          console.error(error);
+        }
+      );
+    } else {
+      alert("Jūsu pārlūkprogramma neatbalsta atrašanās vietas noteikšanu.");
+    }
+  });
+
+  const searchLocationButton = document.getElementById("search-location");
+searchLocationButton.addEventListener("click", () => {
+  const query = document.getElementById("location-input").value;
+  if (!query) {
+    alert("Lūdzu, ievadiet lokāciju!");
+    return;
+  }
+
+  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.length === 0) {
+        alert("Atrašanās vieta nav atrasta.");
+        return;
+      }
+      const { lat, lon } = data[0];
+      map.setView([lat, lon], 13);
+      document.getElementById("map-container").scrollIntoView({ behavior: "smooth" });
+    })
+    .catch((error) => {
+      alert("Radās kļūda, mēģinot atrast atrašanās vietu.");
+      console.error(error);
+    });
+});
+  const inputLocationButton = document.querySelector(".input-location");
+  const manualLocationDiv = document.getElementById("manual-location");
+  inputLocationButton.addEventListener("click", () => {
+    manualLocationDiv.style.display = "flex";
+  });
+});
+
+    </script>
+  <script src="assets/js/app.js"></script>
+
+  <div id="restaurant-list" class="restaurant-section">
+    <h2>Populārākie restorāni</h2>
+    <ul class="restaurant-items">
+      <li class="restaurant-item">
+        <h3>Restorāns "Lulu pica"</h3>
+        <p>Adrese: Krasta iela 76, Rīga</p>
+        <p>Darba laiks: 10:00 - 22:00</p>
+      </li>
+      <li class="restaurant-item">
+        <h3>Restorāns "Lido"</h3>
+        <p>Adrese: Dzirnavu iela 67, Rīga</p>
+        <p>Darba laiks: 11:00 - 23:00</p>
+      </li>
+      <li class="restaurant-item">
+        <h3>Restorāns "Bibliotēka No1"</h3>
+        <p>Adrese: Tērbatas iela 2, Rīga</p>
+        <p>Darba laiks: 12:00 - 23:00</p>
+      </li>
+      <li class="restaurant-item">
+        <h3>Restorāns "Vairāk Saules"</h3>
+        <p>Adrese: Mūkusalas iela 71, Rīga</p>
+        <p>Darba laiks: 10:00 - 22:00</p>
+      </li>
+      <li class="restaurant-item">
+        <h3>Restorāns "Hesburger"</h3>
+        <p>Adrese: Brīvības iela 40, Rīga</p>
+        <p>Darba laiks: 09:00 - 23:00</p>
+      </li>
+      <li class="restaurant-item">
+        <h3>Restorāns "Čili Pica"</h3>
+        <p>Adrese: Elizabetes iela 55, Rīga</p>
+        <p>Darba laiks: 11:00 - 22:00</p>
+      </li>
+    </ul>
+  </div>
+
+</body>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-left">
+      <h3>Pusdienu meklētājs</h3>
+      <p>© 2025</p>
+    </div>
+    <div class="footer-center">
+      <p><i class="fas fa-phone"></i> +371 21 212 121</p>
+      <p><i class="fas fa-envelope"></i> email@email.com</p>
+    </div>
+    <div class="footer-right">
+      <a href="index.html" class="navbar-links">Sākums</a>
+    </div>
+  </div>
+</footer>
+
+</html>
+
+
+
+    

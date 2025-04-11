@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="lv">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kontakti</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+  </head>
+
+  <body id="contact-page">
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="navbar-container">
+        <div class="navbar-toggle" id="mobile-menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+        <ul class="navbar-menu">
+          <li class="navbar-item">
+            <a href="index.html" class="navbar-links">Sākums</a>
+          </li>
+          <li class="navbar-item">
+            <a href="kontakti.html" class="navbar-links">Kontakti</a>
+          </li>
+          <li class="navbar-btn">
+            <a href="login.html" class="button">Ienākt</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Contact Section -->
+    <div class="contact-container">
+      <form action="https://api.web3forms.com/submit" method="POST" class="contact-left">
+        <div class="contact-left-title">
+          <h2>Sazinies ar mums!</h2>
+          <hr>
+        </div>
+        <input type="hidden" name="access_key" value="!ACCESS KODS!">
+        <input type="text" name="name" placeholder="Jūsu vārds" class="contact-inputs" required>
+        <input type="email" name="email" placeholder="Jūsu e-pasts" class="contact-inputs" required>
+        <textarea name="message" placeholder="Ziņa" class="contact-inputs" required></textarea>
+        <button type="submit" class="contact-submit">Iesniegt</button>
+      </form>
+      <div class="contact-right">
+        <img src="images/nosutit.svg" alt="Contact Us Image">
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-left">
+          <h3>Pusdienu meklētājs</h3>
+          <p>© 2025</p>
+        </div>
+        <div class="footer-center">
+          <p><i class="fas fa-phone"></i> +371 21 212 121</p>
+          <p><i class="fas fa-envelope"></i> email@email.com</p>
+        </div>
+        <div class="footer-right">
+          <a href="index.html" class="navbar-links">Sākums</a>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
